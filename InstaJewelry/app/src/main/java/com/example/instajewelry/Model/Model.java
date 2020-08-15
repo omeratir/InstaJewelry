@@ -9,7 +9,11 @@ public class Model {
 
     private Model() {
         for (int i=0 ; i<10; i++) {
-            jewelryList.add(new Jewelry(""+i,"name " + i,"type " + i, false, null));
+            if (i%2 == 0) {
+                jewelryList.add(new Jewelry(""+i,"name " + i,"type " + i, true, null));
+            } else {
+                jewelryList.add(new Jewelry(""+i,"name " + i,"type " + i, false, null));
+            }
         }
 
     }

@@ -7,22 +7,13 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.TextView;
-
-import com.example.instajewelry.Model.Jewelry;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link JewelryDetailsFragment#newInstance} factory method to
+ * Use the {@link TestFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class JewelryDetailsFragment extends Fragment {
-
-    private Jewelry jewelry;
-    TextView name;
-    TextView type;
-    CheckBox isSoldcb;
+public class TestFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,7 +24,8 @@ public class JewelryDetailsFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public JewelryDetailsFragment() {
+    // Default constructor
+    public TestFragment() {
         // Required empty public constructor
     }
 
@@ -43,11 +35,12 @@ public class JewelryDetailsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment JewelryDetailsFragment.
+     * @return A new instance of fragment TestFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static JewelryDetailsFragment newInstance(String param1, String param2) {
-        JewelryDetailsFragment fragment = new JewelryDetailsFragment();
+    public static TestFragment newInstance(String param1, String param2) {
+        TestFragment fragment = new TestFragment();
+        // DATA STRUCTURE
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,30 +61,6 @@ public class JewelryDetailsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_jewelry_details, container, false);
-
-        name = view.findViewById(R.id.jewelry_details_name_tv);
-        type = view.findViewById(R.id.jewelry_details_type_tv);
-        isSoldcb = view.findViewById(R.id.jewelry_details_isSold_cb);
-
-        if (jewelry != null) {
-            update_display();
-        }
-        return view;
-
-    }
-
-    private void update_display() {
-        name.setText(jewelry.name);
-        type.setText(jewelry.type);
-        isSoldcb.setChecked(jewelry.isSold);
-    }
-
-    public void setJewelry(Jewelry j) {
-        this.jewelry = j;
-        if(name!=null) {
-            update_display();
-        }
-
+        return inflater.inflate(R.layout.fragment_test, container, false);
     }
 }

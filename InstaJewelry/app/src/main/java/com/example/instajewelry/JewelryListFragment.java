@@ -1,14 +1,26 @@
 package com.example.instajewelry;
 
+import android.content.Context;
 import android.os.Bundle;
 
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.instajewelry.Model.Jewelry;
+import com.example.instajewelry.Model.Model;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,19 +37,23 @@ public class JewelryListFragment extends Fragment {
     private String title;
     private TextView titleTextView;
 
+    RecyclerView list;
+    List<Jewelry> jewelryList;
+
+    interface Delegate {
+        void onItemSelected(Jewelry jewelry);
+
+    }
+
+    Delegate parent;
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    void setTitle(String title) {
-        if (titleTextView != null) {
-            titleTextView.setText(title);
-        }
-        this.title = title;
-    }
-
     public JewelryListFragment() {
-        // Required empty public constructor
+        // get the data
+        jewelryList = Model.instance.getAllJewelry();
     }
 
     /**
@@ -72,8 +88,129 @@ public class JewelryListFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_jewelry_list, container, false);
-        titleTextView = view.findViewById(R.id.j_list_fragment_title_tv);
-        titleTextView.setText(title);
+
+        list = view.findViewById(R.id.fragment_jewelry_list_list);
+        list.setHasFixedSize(true);
+
+        // linear - as list , grid - as gallery
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        list.setLayoutManager(linearLayoutManager);
+
+        JewelryListAdapter jewelryListAdapter = new JewelryListAdapter();
+        list.setAdapter(jewelryListAdapter);
+
+        jewelryListAdapter.setOnItemClickListener(new JewelryListActivity.OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Log.d("TAG", "row was clicked = " + position);
+                Jewelry jewelry = jewelryList.get(position);
+                parent.onItemSelected(jewelry);
+            }
+        });
+
         return view;
     }
+
+    // Connect the activity to the fragment
+    // context = activity
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        if (context instanceof  Delegate) {
+            parent = (Delegate) getActivity();
+        } else {
+            throw new RuntimeException(context.toString() + "must implement Delegate");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        parent = null;
+    }
+
+    /* static = class didn't match to the parent = can not access to list */
+    static class JewelryRowViewHolder extends RecyclerView.ViewHolder {
+        TextView name;
+        TextView type;
+        CheckBox sold_cb;
+        ImageView image;
+        Jewelry jewelry;
+        JewelryListActivity.OnItemClickListener listener;
+
+        public JewelryRowViewHolder(@NonNull View itemView, final JewelryListActivity.OnItemClickListener listener) {
+            super(itemView);
+            name = itemView.findViewById(R.id.row_name_textbox);
+            type = itemView.findViewById(R.id.row_type_textbox);
+            sold_cb = itemView.findViewById(R.id.row_sold_cb);
+            image = itemView.findViewById(R.id.row_image);
+
+            // catch the click on the cb
+            sold_cb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    jewelry.isSold = sold_cb.isChecked();
+                }
+            });
+
+            this.listener = listener;
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (listener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            listener.onClick(position);
+                        }
+                    }
+                }
+            });
+        }
+
+        public void bind(Jewelry j) {
+            jewelry = j;
+            name.setText(j.name);
+            type.setText(j.type);
+            sold_cb.setChecked(j.isSold);
+        }
+    }
+
+    interface OnItemClickListener {
+        void onClick(int position);
+    }
+
+    // Adapter
+    class JewelryListAdapter extends  RecyclerView.Adapter<JewelryListActivity.JewelryRowViewHolder> {
+        private JewelryListActivity.OnItemClickListener listener;
+
+        void setOnItemClickListener(JewelryListActivity.OnItemClickListener listener) {
+            this.listener = listener;
+        }
+
+        // create row object
+        @NonNull
+        @Override
+        public JewelryListActivity.JewelryRowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+            // context = this activity
+            View v = LayoutInflater.from(getActivity()).inflate(R.layout.list_row, viewGroup, false);
+            JewelryListActivity.JewelryRowViewHolder rowViewHolder = new JewelryListActivity.JewelryRowViewHolder(v,listener);
+            return rowViewHolder;
+        }
+
+        // bind data of item to row
+        @Override
+        public void onBindViewHolder(@NonNull JewelryListActivity.JewelryRowViewHolder holder, int position) {
+            Jewelry jewelry = jewelryList.get(position);
+            holder.bind(jewelry);
+        }
+
+        // count of rows
+        @Override
+        public int getItemCount() {
+            return jewelryList.size();
+        }
+    }
+
 }
