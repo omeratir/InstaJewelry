@@ -6,6 +6,9 @@ import android.os.Bundle;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -77,10 +80,11 @@ public class JewelryListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+//        // Default
+//        if (getArguments() != null) {
+//            mParam1 = getArguments().getString(ARG_PARAM1);
+//            mParam2 = getArguments().getString(ARG_PARAM2);
+//        }
     }
 
     @Override
@@ -120,8 +124,10 @@ public class JewelryListFragment extends Fragment {
         if (context instanceof  Delegate) {
             parent = (Delegate) getActivity();
         } else {
-            throw new RuntimeException(context.toString() + "must implement Delegate");
+            throw new RuntimeException(context.toString() + "parent must implement Delegate - Jewelry List Fragment");
         }
+
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -213,4 +219,19 @@ public class JewelryListFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.jewelry_list_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_jewelry_list_add:
+                Log.d("TAG" , "fragment handle add menu click");
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

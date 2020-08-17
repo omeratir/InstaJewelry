@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    android:label="Jewelry"
+    app:startDestination="@id/jewelryListFragment">
+
+    <fragment
+        android:id="@+id/jewelryListFragment"
+        android:name="com.example.instajewelry.JewelryListFragment"
+        android:label="Jewelry"
+        tools:layout="@layout/fragment_jewelry_list" >
+        <action
+            android:id="@+id/action_jewelryListFragment_to_jewelryDetailsFragment"
+            app:destination="@id/jewelryDetailsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/jewelryDetailsFragment"
+        android:name="com.example.instajewelry.JewelryDetailsFragment"
+        android:label="Details"
+        tools:layout="@layout/fragment_jewelry_details" >
+        <argument
+            android:name="jewelry"
+            app:argType="com.example.instajewelry.Model.Jewelry" />
+    </fragment>
+    <action android:id="@+id/action_global_jewelryDetailsFragment" app:destination="@id/jewelryDetailsFragment" />
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.instajewelry.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+</navigation>

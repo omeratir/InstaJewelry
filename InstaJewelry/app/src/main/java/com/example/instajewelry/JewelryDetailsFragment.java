@@ -3,6 +3,8 @@ package com.example.instajewelry;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,9 +76,21 @@ public class JewelryDetailsFragment extends Fragment {
         type = view.findViewById(R.id.jewelry_details_type_tv);
         isSoldcb = view.findViewById(R.id.jewelry_details_isSold_cb);
 
+        jewelry = JewelryDetailsFragmentArgs.fromBundle(getArguments()).getJewelry();
+
         if (jewelry != null) {
             update_display();
         }
+
+        View closeButton = view.findViewById(R.id.jewelry_details_close_btn);
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Back to list by pop back stack
+                NavController navController = Navigation.findNavController(v);
+                navController.popBackStack();
+            }
+        });
         return view;
 
     }
@@ -87,11 +101,4 @@ public class JewelryDetailsFragment extends Fragment {
         isSoldcb.setChecked(jewelry.isSold);
     }
 
-    public void setJewelry(Jewelry j) {
-        this.jewelry = j;
-        if(name!=null) {
-            update_display();
-        }
-
-    }
 }

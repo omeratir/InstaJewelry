@@ -1,8 +1,9 @@
 package com.example.instajewelry.Model;
 
+import java.io.Serializable;
 import java.util.Currency;
 
-public class Jewelry {
+public class Jewelry implements Serializable {
     public String id;
     public String name;
     public String type; // silver , gold , rose gold
