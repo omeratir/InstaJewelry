@@ -231,6 +231,12 @@ public class JewelryListFragment extends Fragment {
             case R.id.menu_jewelry_list_add:
                 Log.d("TAG" , "fragment handle add menu click");
                 return true;
+            case R.id.menu_jewelry_list_info:
+                Log.d("TAG" , "fragment handle info menu click");
+                AlertDialogFragment dialogFragment = AlertDialogFragment.newInstance("Jewelry app info", "welcome to info page!!!");
+
+                dialogFragment.show(getParentFragmentManager(),"TAG");
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
