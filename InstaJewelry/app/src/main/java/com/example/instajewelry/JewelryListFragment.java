@@ -230,6 +230,8 @@ public class JewelryListFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.menu_jewelry_list_add:
                 Log.d("TAG" , "fragment handle add menu click");
+                MyDatePickerFragment picker = new MyDatePickerFragment();
+                picker.show(getParentFragmentManager(), "TAG");
                 return true;
             case R.id.menu_jewelry_list_info:
                 Log.d("TAG" , "fragment handle info menu click");
