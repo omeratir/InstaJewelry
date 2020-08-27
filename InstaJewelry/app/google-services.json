@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "798228217574",
+    "firebase_url": "https://instajewelry-android.firebaseio.com",
+    "project_id": "instajewelry-android",
+    "storage_bucket": "instajewelry-android.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798228217574:android:e031b658796409fe874527",
+        "android_client_info": {
+          "package_name": "com.example.instajewelry"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "798228217574-50cujcsl9urn4p17rcp7jhj46l5e1q2d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvwnXJYn6gYGnct12hzJSSiOQcu1_uYHA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "798228217574-50cujcsl9urn4p17rcp7jhj46l5e1q2d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

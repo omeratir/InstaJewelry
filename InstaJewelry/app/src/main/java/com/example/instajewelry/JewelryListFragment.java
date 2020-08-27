@@ -17,106 +17,44 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.instajewelry.Model.Jewelry;
-import com.example.instajewelry.Model.Model;
+import com.example.instajewelry.Model.JewelryModel;
 
+import java.util.LinkedList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link JewelryListFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class JewelryListFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+public class JewelryListFragment extends Fragment {
 
     private String title;
     private TextView titleTextView;
 
     RecyclerView list;
-    List<Jewelry> jewelryList;
+    List<Jewelry> jewelryList = new LinkedList<Jewelry>();
+    JewelryListAdapter jewelryListAdapter;
+    JewelryListViewModel viewModel;
+    LiveData<List<Jewelry>> liveData;
 
     interface Delegate {
         void onItemSelected(Jewelry jewelry);
-
     }
 
     Delegate parent;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     public JewelryListFragment() {
-        // get the data
-        jewelryList = Model.instance.getAllJewelry();
-    }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment JewelryListFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static JewelryListFragment newInstance(String param1, String param2) {
-        JewelryListFragment fragment = new JewelryListFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-//        // Default
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_jewelry_list, container, false);
-
-        list = view.findViewById(R.id.fragment_jewelry_list_list);
-        list.setHasFixedSize(true);
-
-        // linear - as list , grid - as gallery
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        list.setLayoutManager(linearLayoutManager);
-
-        JewelryListAdapter jewelryListAdapter = new JewelryListAdapter();
-        list.setAdapter(jewelryListAdapter);
-
-        jewelryListAdapter.setOnItemClickListener(new JewelryListActivity.OnItemClickListener() {
-            @Override
-            public void onClick(int position) {
-                Log.d("TAG", "row was clicked = " + position);
-                Jewelry jewelry = jewelryList.get(position);
-                parent.onItemSelected(jewelry);
-            }
-        });
-
-        return view;
     }
 
     // Connect the activity to the fragment
     // context = activity
+    // Call one time
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -128,6 +66,68 @@ public class JewelryListFragment extends Fragment {
         }
 
         setHasOptionsMenu(true);
+
+        // after the connect to the activity
+        viewModel = new ViewModelProvider(this).get(JewelryListViewModel.class);
+    }
+
+    // Call multi times
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        final View view = inflater.inflate(R.layout.fragment_jewelry_list, container, false);
+
+        list = view.findViewById(R.id.fragment_jewelry_list_list);
+        list.setHasFixedSize(true);
+
+        // linear - as list , grid - as gallery
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        list.setLayoutManager(linearLayoutManager);
+
+        jewelryListAdapter = new JewelryListAdapter();
+        list.setAdapter(jewelryListAdapter);
+
+        jewelryListAdapter.setOnItemClickListener(new OnItemClickListener() {
+            @Override
+            public void onClick(int position) {
+                Log.d("TAG", "row was clicked = " + position);
+                Jewelry jewelry = jewelryList.get(position);
+                parent.onItemSelected(jewelry);
+//                NavGraphDirections.ActionGlobalJewelryDetailsFragment direction = JewelryListFragmentDirections.actionGlobalJewelryDetailsFragment(jewelry);
+//                Navigation.findNavController(view).navigate(direction);
+            }
+        });
+
+        Log.d("TAG" , "get live data");
+        liveData = viewModel.getData();
+
+        Log.d("TAG" , "observe live data");
+//        liveData.observe(getViewLifecycleOwner(), new Observer<List<Jewelry>>() {
+//            @Override
+//            public void onChanged(List<Jewelry> jewelries) {
+//                // when the data on live data changed
+//                jewelryList = jewelries;
+//                jewelryListAdapter.notifyDataSetChanged();
+//            }
+//        });
+
+        final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.jewelry_list_swipe_refresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // call db to refresh.
+                viewModel.refresh(new JewelryModel.CompListener() {
+                    @Override
+                    public void onComplete() {
+                        // stop the refreshing
+                        swipeRefresh.setRefreshing(false);
+                    }
+                });
+            }
+        });
+
+        return view;
     }
 
     @Override
@@ -143,9 +143,9 @@ public class JewelryListFragment extends Fragment {
         CheckBox sold_cb;
         ImageView image;
         Jewelry jewelry;
-        JewelryListActivity.OnItemClickListener listener;
+        OnItemClickListener listener;
 
-        public JewelryRowViewHolder(@NonNull View itemView, final JewelryListActivity.OnItemClickListener listener) {
+        public JewelryRowViewHolder(@NonNull View itemView, final OnItemClickListener listener) {
             super(itemView);
             name = itemView.findViewById(R.id.row_name_textbox);
             type = itemView.findViewById(R.id.row_type_textbox);
@@ -160,7 +160,7 @@ public class JewelryListFragment extends Fragment {
                 }
             });
 
-            this.listener = listener;
+//            this.listener = listener;
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,26 +188,26 @@ public class JewelryListFragment extends Fragment {
     }
 
     // Adapter
-    class JewelryListAdapter extends  RecyclerView.Adapter<JewelryListActivity.JewelryRowViewHolder> {
-        private JewelryListActivity.OnItemClickListener listener;
+    class JewelryListAdapter extends  RecyclerView.Adapter<JewelryRowViewHolder> {
+        private OnItemClickListener listener;
 
-        void setOnItemClickListener(JewelryListActivity.OnItemClickListener listener) {
+        void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
         }
 
         // create row object
         @NonNull
         @Override
-        public JewelryListActivity.JewelryRowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        public JewelryRowViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
             // context = this activity
             View v = LayoutInflater.from(getActivity()).inflate(R.layout.list_row, viewGroup, false);
-            JewelryListActivity.JewelryRowViewHolder rowViewHolder = new JewelryListActivity.JewelryRowViewHolder(v,listener);
+            JewelryRowViewHolder rowViewHolder = new JewelryRowViewHolder(v,listener);
             return rowViewHolder;
         }
 
         // bind data of item to row
         @Override
-        public void onBindViewHolder(@NonNull JewelryListActivity.JewelryRowViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull JewelryRowViewHolder holder, int position) {
             Jewelry jewelry = jewelryList.get(position);
             holder.bind(jewelry);
         }
