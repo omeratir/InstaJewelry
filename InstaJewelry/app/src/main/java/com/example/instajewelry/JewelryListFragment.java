@@ -20,6 +20,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -42,6 +45,7 @@ public class JewelryListFragment extends Fragment {
     JewelryListAdapter jewelryListAdapter;
     JewelryListViewModel viewModel;
     LiveData<List<Jewelry>> liveData;
+    SwipeRefreshLayout swipeRefresh;
 
     interface Delegate {
         void onItemSelected(Jewelry jewelry);
@@ -111,6 +115,23 @@ public class JewelryListFragment extends Fragment {
 //        jewelryList = viewModel.getDataList();
 
         Log.d("TAG" , "get live data");
+
+
+        Log.d("TAG" , "refresh");
+        swipeRefresh = view.findViewById(R.id.jewelry_list_swipe_refresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // call db to refresh.
+                viewModel.refresh(new JewelryModel.CompListener() {
+                    @Override
+                    public void onComplete() {
+                        swipeRefresh.setRefreshing(true);
+                    }
+                });
+            }
+        });
+
         liveData = viewModel.getData();
 
         Log.d("TAG" , "observe live data");
@@ -122,23 +143,9 @@ public class JewelryListFragment extends Fragment {
                 Log.d("TAG" , "get data success");
                 jewelryListAdapter.notifyDataSetChanged();
                 Log.d("TAG" , "adapter success");
+                swipeRefresh.setRefreshing(false);
             }
 
-        });
-
-        Log.d("TAG" , "refresh");
-        final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.jewelry_list_swipe_refresh);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // call db to refresh.
-                viewModel.refresh(new JewelryModel.CompListener() {
-                    @Override
-                    public void onComplete() {
-                        swipeRefresh.setRefreshing(false);
-                    }
-                });
-            }
         });
 
         return view;
@@ -243,9 +250,10 @@ public class JewelryListFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_jewelry_list_add:
-                Log.d("TAG" , "fragment handle add menu click");
-                MyDatePickerFragment picker = new MyDatePickerFragment();
-                picker.show(getParentFragmentManager(), "TAG");
+                Log.d("TAG" , "fragment handle add menu click -> navigate to add new jewelry");
+                NavController navController = Navigation.findNavController(list);
+                NavDirections direction = NewJewelryFragmentDirections.actionGlobalNewJewelryFragment();
+                navController.navigate(direction);
                 return true;
             case R.id.menu_jewelry_list_info:
                 Log.d("TAG" , "fragment handle info menu click");
