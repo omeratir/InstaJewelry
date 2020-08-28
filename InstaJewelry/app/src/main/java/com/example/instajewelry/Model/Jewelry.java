@@ -23,6 +23,10 @@ public class Jewelry implements Serializable {
     public String imageUrl;
 //    double lastUpdated;
 
+    public Jewelry() {
+
+    }
+
     public Jewelry(String id, String name, String type, String cost, Boolean isSold, String imageUrl) {
         this.id = id;
         this.name = name;

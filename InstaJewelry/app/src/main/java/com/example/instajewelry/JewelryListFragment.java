@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.instajewelry.Model.AppLocalDb;
 import com.example.instajewelry.Model.Jewelry;
 import com.example.instajewelry.Model.JewelryModel;
 
@@ -49,7 +50,15 @@ public class JewelryListFragment extends Fragment {
     Delegate parent;
 
     public JewelryListFragment() {
-
+//        JewelryModel.instance.getAllJewelriesLocal(new JewelryModel.Listener<List<Jewelry>>() {
+//            @Override
+//            public void onComplete(List<Jewelry> _data) {
+//                jewelryList = _data;
+//                if (jewelryListAdapter != null){
+//                    jewelryListAdapter.notifyDataSetChanged();
+//                }
+//            }
+//        });
     }
 
     // Connect the activity to the fragment
@@ -99,19 +108,25 @@ public class JewelryListFragment extends Fragment {
             }
         });
 
+//        jewelryList = viewModel.getDataList();
+
         Log.d("TAG" , "get live data");
         liveData = viewModel.getData();
 
         Log.d("TAG" , "observe live data");
-//        liveData.observe(getViewLifecycleOwner(), new Observer<List<Jewelry>>() {
-//            @Override
-//            public void onChanged(List<Jewelry> jewelries) {
-//                // when the data on live data changed
-//                jewelryList = jewelries;
-//                jewelryListAdapter.notifyDataSetChanged();
-//            }
-//        });
+        liveData.observe(getViewLifecycleOwner(), new Observer<List<Jewelry>>() {
+            @Override
+            public void onChanged(List<Jewelry> jewelries) {
+                // when the data on live data changed
+                jewelryList = jewelries;
+                Log.d("TAG" , "get data success");
+                jewelryListAdapter.notifyDataSetChanged();
+                Log.d("TAG" , "adapter success");
+            }
 
+        });
+
+        Log.d("TAG" , "refresh");
         final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.jewelry_list_swipe_refresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -120,7 +135,6 @@ public class JewelryListFragment extends Fragment {
                 viewModel.refresh(new JewelryModel.CompListener() {
                     @Override
                     public void onComplete() {
-                        // stop the refreshing
                         swipeRefresh.setRefreshing(false);
                     }
                 });

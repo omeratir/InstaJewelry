@@ -11,11 +11,11 @@ abstract class AppLocalDbRepository extends RoomDatabase {
     public abstract JewelryDao jewelryDao();
 }
 
-public class AppLocalDb{
+public class AppLocalDb {
     static public AppLocalDbRepository db =
             Room.databaseBuilder(MyApplication.context,
                     AppLocalDbRepository.class,
-                    "dbFileName.db")
+                    "jewelries.db")
                     .fallbackToDestructiveMigration()
                     .build();
 }

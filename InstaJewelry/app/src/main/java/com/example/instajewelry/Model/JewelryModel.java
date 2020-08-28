@@ -27,6 +27,28 @@ public class JewelryModel {
 //        }
     }
 
+    public void getAllJewelriesLocal(final Listener<List<Jewelry>> listener){
+        @SuppressLint("StaticFieldLeak")
+        AsyncTask<String, String, List<Jewelry>> taskA = new AsyncTask<String, String, List<Jewelry>>(){
+            @Override
+            protected List<Jewelry> doInBackground(String... strings) {
+                for (int i = 0 ; i < 20 ; i++) {
+                    Log.d("TAG", "INSERT");
+                    AppLocalDb.db.jewelryDao().insertAll(new Jewelry(""+i,"name"+i,"type of " + i,"" + i*2, true, null));
+                }
+                return AppLocalDb.db.jewelryDao().getAllList();
+            }
+            @Override
+            protected void onPostExecute(List<Jewelry> jewelries) {
+                super.onPostExecute(jewelries);
+                listener.onComplete(jewelries);
+            }
+        };
+        taskA.execute();
+    }
+
+
+
     public void addJewelry(Jewelry jewelry,Listener<Boolean> listener) {
         JewelryFirebase.addJewelry(jewelry,listener);
     }
@@ -64,15 +86,17 @@ public class JewelryModel {
     }
 
     public LiveData<List<Jewelry>> getAllJewelries(){
-//        Log.d("TAG" , "get all");
-//        LiveData<List<Jewelry>> liveData = AppLocalDb.db.jewelryDao().getAll();
-//        refreshJewelryList(null);
-//        Log.d("TAG" , "get all from app local db");
-//
-//
-//        return liveData;
+        Log.d("TAG" , "get all");
+        LiveData<List<Jewelry>> liveData = null;
+        liveData = AppLocalDb.db.jewelryDao().getAll();
+        refreshJewelryList(null);
+        Log.d("TAG" , "get all from app local db");
+        if (liveData == null) {
+            Log.d("TAG", "live data = null ");
+        }
 
-        return null;
+        return liveData;
+//        return null;
     }
 
 

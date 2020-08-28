@@ -14,6 +14,9 @@ public interface JewelryDao {
     @Query("select * from Jewelry")
     LiveData<List<Jewelry>> getAll();
 
+    @Query("select * from Jewelry")
+    List<Jewelry> getAllList();
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertAll(Jewelry... jewelries);
 
