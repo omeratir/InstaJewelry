@@ -51,6 +51,8 @@ public class JewelryModel {
 
     public void addJewelry(Jewelry jewelry,Listener<Boolean> listener) {
         JewelryFirebase.addJewelry(jewelry,listener);
+        // insert to local storage
+//        AppLocalDb.db.jewelryDao().insertAll(jewelry);
     }
 
     public void refreshJewelryList(final CompListener listener){

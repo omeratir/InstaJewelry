@@ -30,6 +30,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.instajewelry.Model.AppLocalDb;
 import com.example.instajewelry.Model.Jewelry;
 import com.example.instajewelry.Model.JewelryModel;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -201,6 +202,10 @@ public class JewelryListFragment extends Fragment {
             name.setText(j.name);
             type.setText(j.type);
             sold_cb.setChecked(j.isSold);
+
+            if ((j.imageUrl != null) && (j.imageUrl != "")) {
+                Picasso.get().load(j.imageUrl).into(image);
+            }
         }
     }
 

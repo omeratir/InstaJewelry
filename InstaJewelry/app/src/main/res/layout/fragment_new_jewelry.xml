@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".NewJewelryFragment">
 
     <ImageView
@@ -11,12 +11,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
+        android:background="#FFFFFF"
         android:src="@android:drawable/sym_def_app_icon"
-        app:layout_constraintDimensionRatio="4:2"
+        app:layout_constraintDimensionRatio="4:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/jewelry" />
 
     <Button
         android:id="@+id/new_jewelry_take_photo_btn"
@@ -35,7 +37,7 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Name:"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -48,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Type:"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -61,7 +63,7 @@
         android:layout_width="wrap_content"
         android:layout_height="45dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Cost:"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
@@ -74,11 +76,10 @@
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/new_jewelry_name_tv"
         app:layout_constraintTop_toBottomOf="@+id/new_jewelry_take_photo_btn" />
@@ -88,7 +89,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Check if the item sold"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textStyle="bold"
@@ -100,11 +101,10 @@
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="Enter the type"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/new_jewelry_type_tv"
         app:layout_constraintTop_toBottomOf="@+id/new_jewelry_name_et" />
@@ -114,22 +114,21 @@
         android:layout_width="0dp"
         android:layout_height="45dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Enter the cost"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/new_jewelry_cost_tv"
-        app:layout_constraintTop_toBottomOf="@+id/new_jewelry_type_et" />
+        app:layout_constraintTop_toBottomOf="@+id/new_jewelry_type_et"
+        tools:text="Enter Cost in NIS" />
 
     <Button
         android:id="@+id/new_jewelry_savenewjewelry_btn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_height="48dp"
+        android:layout_marginTop="24dp"
         android:text="Save Jewelry!"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_jewelry_sold_cb" />
