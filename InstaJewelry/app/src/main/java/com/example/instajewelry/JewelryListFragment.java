@@ -204,7 +204,11 @@ public class JewelryListFragment extends Fragment {
             sold_cb.setChecked(j.isSold);
 
             if ((j.imageUrl != null) && (j.imageUrl != "")) {
-                Picasso.get().load(j.imageUrl).into(image);
+                // add spinner here
+                Picasso.get().load(j.imageUrl).placeholder(R.drawable.jewelryicon).into(image);
+//                Picasso.get().load(j.imageUrl).into(image);
+            } else {
+                image.setImageResource(R.drawable.jewelryicon);
             }
         }
     }
