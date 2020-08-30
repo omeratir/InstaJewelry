@@ -27,6 +27,8 @@ public class AuthFirebase
     final static String USERS_COLLECTION = "users";
     private static String userId;
     private static Map<String, Object> user;
+    private static User u;
+    public static boolean flag = false;
 
     @SuppressLint("RestrictedApi")
     public static void addUser(User user , final UserModel.Listener<Boolean> listener) {
@@ -41,7 +43,7 @@ public class AuthFirebase
         });
     }
 
-    public static void getUser() {
+    public static void getUserFromFirebase() {
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
         DocumentReference documentReference = firebaseFirestore.collection(USERS_COLLECTION).document(userId);
@@ -54,6 +56,7 @@ public class AuthFirebase
                     if (document.exists()) {
                         Log.d("TAG", "User Data: " + document.getData());
                         user = document.getData();
+                        u = new User(user.get("uid").toString(), user.get("name").toString(), user.get("email").toString());
                     } else {
                         Log.d("TAG", "User not exists");
                     }
@@ -63,7 +66,5 @@ public class AuthFirebase
             }
         });
     }
-
-
 
 }

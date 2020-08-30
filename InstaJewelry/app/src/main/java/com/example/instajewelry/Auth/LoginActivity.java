@@ -11,10 +11,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.instajewelry.HomeActivity;
+import com.example.instajewelry.JewelryListFragment;
 import com.example.instajewelry.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText password_et;
     FirebaseAuth auth;
     Button loginBtn;
-    TextView movetosignupBtn;
+    Button movetosignupBtn;
     ProgressBar progressBar;
 
     @Override
@@ -44,6 +44,13 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         progressBar = findViewById(R.id.login_progressBar);
+
+        movetosignupBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
+            }
+        });
 
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,13 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 progressBar.setVisibility(View.VISIBLE);
-
-                movetosignupBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(getApplicationContext(), SignUpActivity.class));
-                    }
-                });
 
                 // auth the user
 

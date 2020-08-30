@@ -60,13 +60,21 @@ public class AlertDialogFragment extends DialogFragment {
             builder.setMessage(alertMessage);
         }
 
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dismiss();
                 // dismiss close dialog
             }
         });
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
 
         // Create the AlertDialog object and return it
         // builder create = create the dialog object

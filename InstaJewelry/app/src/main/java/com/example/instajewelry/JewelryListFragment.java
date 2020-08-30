@@ -99,7 +99,7 @@ public class JewelryListFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(linearLayoutManager);
 
-        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
         jewelryListAdapter = new JewelryListAdapter();
         list.setAdapter(jewelryListAdapter);

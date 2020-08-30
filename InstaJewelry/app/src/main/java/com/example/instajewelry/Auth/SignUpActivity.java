@@ -31,7 +31,7 @@ public class SignUpActivity extends AppCompatActivity {
     EditText password_et;
     FirebaseAuth auth;
     Button signUpBtn;
-    TextView movetologinBtn;
+    Button movetologinBtn;
     ProgressBar progressBar;
     FirebaseFirestore firebaseFirestore;
     String userId;

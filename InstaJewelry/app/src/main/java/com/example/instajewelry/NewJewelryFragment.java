@@ -42,6 +42,7 @@ public class NewJewelryFragment extends Fragment {
     Button takePhotoBtn;
     Button saveBtn;
     Bitmap imageBitmap;
+    ProgressBar progressBar;
 
     public NewJewelryFragment() {
         // Required empty public constructor
@@ -68,6 +69,7 @@ public class NewJewelryFragment extends Fragment {
         soldCb = view.findViewById(R.id.new_jewelry_sold_cb);
         imageView = view.findViewById(R.id.new_jewelry_image_v);
         saveBtn = view.findViewById(R.id.new_jewelry_savenewjewelry_btn);
+        progressBar = view.findViewById(R.id.new_jewelry_progressBar);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
@@ -82,6 +84,8 @@ public class NewJewelryFragment extends Fragment {
     }
 
     void saveNewJewelry() {
+        progressBar.setVisibility(View.VISIBLE);
+
         final String name = nameTv.getText().toString();
         Log.d("TAG", "name = " + name);
 
@@ -94,29 +98,47 @@ public class NewJewelryFragment extends Fragment {
 
         java.util.Date d = new Date();
 
-        StorageModel.uploadImage(imageBitmap, "my_photo" + d.getTime(), new StorageModel.Listener() {
-            @Override
-            public void onSuccess(String url) {
-                Log.d("TAG", "image url = " + url);
+        if (imageBitmap != null) {
+            StorageModel.uploadImage(imageBitmap, "my_photo" + d.getTime(), new StorageModel.Listener() {
+                @Override
+                public void onSuccess(String url) {
+                    Log.d("TAG", "image url = " + url);
 
-                // create object
-                Jewelry jewelry = new Jewelry(name,name,type,cost,ifSold,url);
-                JewelryModel.instance.addJewelry(jewelry, new JewelryModel.Listener<Boolean>() {
-                    @Override
-                    public void onComplete(Boolean data) {
-                        Log.d("TAG", "save new jewelry success");
-                        NavController navController = Navigation.findNavController(view);
-                        // Back to list
-                        navController.navigateUp();
-                    }
-                });
-            }
+                    // create object
+                    Jewelry jewelry = new Jewelry(name,name,type,cost,ifSold,url);
+                    JewelryModel.instance.addJewelry(jewelry, new JewelryModel.Listener<Boolean>() {
+                        @Override
+                        public void onComplete(Boolean data) {
+                            Log.d("TAG", "save new jewelry success");
+                            NavController navController = Navigation.findNavController(view);
+                            NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
+                            navController.navigate(direction);
+                        }
+                    });
+                }
 
-            @Override
-            public void onFail() {
-                Log.d("TAG", "image url upload failed ");
-            }
-        });
+                @Override
+                public void onFail() {
+                    Log.d("TAG", "image url upload failed ");
+                }
+            });
+        } else {
+            // create object
+            Jewelry jewelry = new Jewelry(name,name,type,cost,ifSold,null);
+            JewelryModel.instance.addJewelry(jewelry, new JewelryModel.Listener<Boolean>() {
+                @Override
+                public void onComplete(Boolean data) {
+                    Log.d("TAG", "save new jewelry success");
+                    NavController navController = Navigation.findNavController(view);
+                    // Back to list
+                    navController.navigateUp();
+                }
+            });
+        }
+
+
+
+
 
     }
 

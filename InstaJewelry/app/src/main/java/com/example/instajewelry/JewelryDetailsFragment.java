@@ -111,12 +111,17 @@ public class JewelryDetailsFragment extends Fragment {
                 return true;
             case R.id.menu_jewelry_details_delete:
                 Log.d("TAG" , "Delete clicked!");
+                AlertDialogFragment dialogFragment = AlertDialogFragment.newInstance("WARNING", "Are you sure that you want to delete?");
+                dialogFragment.show(getParentFragmentManager(),"TAG");
+                if (dialogFragment.isCancelable()) {
+                    Log.d("TAG" , "Cancel clicked");
+                }
 //                jewelry.setDeleted(true);
-                JewelryFirebase.updateJewelryDeleted(jewelry);
-                JewelryModel.instance.deleteJewelry(jewelry);
-                NavController navController = Navigation.findNavController(getView());
-                NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
-                navController.navigate(direction);
+//                JewelryFirebase.updateJewelryDeleted(jewelry);
+//                JewelryModel.instance.deleteJewelry(jewelry);
+//                NavController navController = Navigation.findNavController(getView());
+//                NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
+//                navController.navigate(direction);
                 return true;
         }
         return super.onOptionsItemSelected(item);

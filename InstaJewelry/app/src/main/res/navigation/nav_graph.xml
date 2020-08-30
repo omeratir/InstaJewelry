@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     android:label="Jewelry"
-    app:startDestination="@id/homeFragment">
+    app:startDestination="@id/jewelryListFragment">
 
     <fragment
         android:id="@+id/jewelryListFragment"
@@ -41,5 +41,6 @@
         android:id="@+id/myAccountFragment"
         android:name="com.example.instajewelry.MyAccountFragment"
         android:label="fragment_my_account"
-        tools:layout="@layout/fragment_my_account" /><action android:id="@+id/action_global_myAccountFragment" app:destination="@id/myAccountFragment"/>
+        tools:layout="@layout/fragment_my_account" />
+    <action android:id="@+id/action_global_myAccountFragment" app:destination="@id/myAccountFragment" />
 </navigation>
