@@ -3,10 +3,12 @@ package com.example.instajewelry.Model;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.LiveData;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -29,7 +31,9 @@ public class JewelryFirebase {
                     jewelryList = new LinkedList<Jewelry>();
                     for(QueryDocumentSnapshot doc : task.getResult()){
                         Jewelry jewelry = doc.toObject(Jewelry.class);
-                        jewelryList.add(jewelry);
+                        if (!jewelry.isDeleted()) {
+                            jewelryList.add(jewelry);
+                        }
                     }
                 }
                 Log.d("TAG" , "db get");
@@ -40,7 +44,11 @@ public class JewelryFirebase {
 
     public static void addJewelry(Jewelry jewelry, final JewelryModel.Listener<Boolean> listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection(JEWELRY_COLLECTION).document(jewelry.getId()).set(jewelry).addOnCompleteListener(new OnCompleteListener<Void>() {
+        DocumentReference documentReference = db.collection(JEWELRY_COLLECTION).document();
+
+        jewelry.setId(documentReference.getId());
+
+        documentReference.set(jewelry).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (listener!=null){
@@ -48,5 +56,55 @@ public class JewelryFirebase {
                 }
             }
         });
+
+
+//        db.collection(JEWELRY_COLLECTION).document().set(jewelry).addOnCompleteListener(new OnCompleteListener<Void>() {
+//            @Override
+//            public void onComplete(@NonNull Task<Void> task) {
+//                if (listener!=null){
+//                    listener.onComplete(task.isSuccessful());
+//                }
+//            }
+//        });
+    }
+
+    public static void deleteJewelry(Jewelry jewelry) {
+        Log.d("TAG", "Delete document!");
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Log.d("TAG", "id before delete = " + jewelry.id);
+        db.collection(JEWELRY_COLLECTION).document(jewelry.id)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error deleting document", e);
+                    }
+                });
+
+    }
+
+    public static void updateJewelryDeleted(Jewelry jewelry) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection(JEWELRY_COLLECTION).document(jewelry.id)
+                .update("deleted", true)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error deleting document", e);
+                    }
+                });
+
     }
 }

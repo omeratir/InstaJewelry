@@ -7,8 +7,4 @@
         android:icon="@android:drawable/ic_input_add"
         android:title="Add"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/menu_jewelry_list_info"
-        android:title="Info"
-        app:showAsAction="always" />
 </menu>

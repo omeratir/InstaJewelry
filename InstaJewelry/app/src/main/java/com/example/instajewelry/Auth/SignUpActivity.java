@@ -16,11 +16,13 @@ import android.widget.Toast;
 
 import com.example.instajewelry.HomeActivity;
 import com.example.instajewelry.HomeFragment;
+import com.example.instajewelry.Model.JewelryModel;
 import com.example.instajewelry.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -31,8 +33,9 @@ public class SignUpActivity extends AppCompatActivity {
     Button signUpBtn;
     TextView movetologinBtn;
     ProgressBar progressBar;
-
-
+    FirebaseFirestore firebaseFirestore;
+    String userId;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +68,11 @@ public class SignUpActivity extends AppCompatActivity {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String email = email_et.getText().toString().trim();
+                // trim remove spaces
+
+                final String email = email_et.getText().toString().trim();
                 String password = password_et.getText().toString().trim();
+                final String name = name_et.getText().toString().trim();
 
                 if (TextUtils.isEmpty(email)) {
                     email_et.setError("Email is required.");
@@ -83,6 +89,11 @@ public class SignUpActivity extends AppCompatActivity {
                     return;
                 }
 
+                if (TextUtils.isEmpty(name)) {
+                    email_et.setError("Enter your name.");
+                    return;
+                }
+
                 progressBar.setVisibility(View.VISIBLE);
 
                 // Add the user to firebase
@@ -93,6 +104,18 @@ public class SignUpActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d("TAG", "user is created successful");
                             Toast.makeText(SignUpActivity.this, "User Created" , Toast.LENGTH_SHORT).show();
+
+                            userId = auth.getCurrentUser().getUid();
+
+                            user = new User(userId,name,email);
+                            // storage the user in firestore
+                            AuthFirebase.addUser(user, new UserModel.Listener<Boolean>() {
+                                @Override
+                                public void onComplete(Boolean data) {
+                                    Log.d("TAG", "save new jewelry success");
+                                }
+                            });
+
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
                             Log.d("TAG", "user is create failed");

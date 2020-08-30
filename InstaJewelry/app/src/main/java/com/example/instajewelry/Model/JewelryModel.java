@@ -21,38 +21,16 @@ public class JewelryModel {
         void onComplete();
     }
     public JewelryModel(){
-//        for (int i=0;i<10;i++){
-//            Jewelry jewelry = new Jewelry(""+i,"name"+1,"type ++ " + i,"" + i*2, true, null);
-//            addJewelry(jewelry,null);
-//        }
-    }
 
-    public void getAllJewelriesLocal(final Listener<List<Jewelry>> listener){
-        @SuppressLint("StaticFieldLeak")
-        AsyncTask<String, String, List<Jewelry>> taskA = new AsyncTask<String, String, List<Jewelry>>(){
-            @Override
-            protected List<Jewelry> doInBackground(String... strings) {
-                for (int i = 0 ; i < 20 ; i++) {
-                    Log.d("TAG", "INSERT");
-                    AppLocalDb.db.jewelryDao().insertAll(new Jewelry(""+i,"name"+i,"type of " + i,"" + i*2, true, null));
-                }
-                return AppLocalDb.db.jewelryDao().getAllList();
-            }
-            @Override
-            protected void onPostExecute(List<Jewelry> jewelries) {
-                super.onPostExecute(jewelries);
-                listener.onComplete(jewelries);
-            }
-        };
-        taskA.execute();
     }
-
 
 
     public void addJewelry(Jewelry jewelry,Listener<Boolean> listener) {
         JewelryFirebase.addJewelry(jewelry,listener);
         // insert to local storage
+        Log.d("TAG", "INSERT to local storage");
 //        AppLocalDb.db.jewelryDao().insertAll(jewelry);
+//        Log.d("TAG", "INSERT to local storage success");
     }
 
     public void refreshJewelryList(final CompListener listener){
@@ -66,7 +44,11 @@ public class JewelryModel {
                     protected String doInBackground(String... strings) {
                         Log.d("TAG" , "do in background refresh");
                         for(Jewelry jewelry : data){
-                            AppLocalDb.db.jewelryDao().insertAll(jewelry);
+                            if (!jewelry.isDeleted()) {
+                                AppLocalDb.db.jewelryDao().insertAll(jewelry);
+                            } else {
+                                AppLocalDb.db.jewelryDao().delete(jewelry);
+                            }
                         }
                         return "";
                     }
@@ -87,6 +69,12 @@ public class JewelryModel {
         JewelryFirebase.getAllJewelries(listener);
     }
 
+    public void deleteJewelry(Jewelry jewelry) {
+        JewelryFirebase.deleteJewelry(jewelry);
+        refreshJewelryList(null);
+//        AppLocalDb.db.jewelryDao().delete(jewelry);
+    }
+
     public LiveData<List<Jewelry>> getAllJewelries(){
         Log.d("TAG" , "get all");
         LiveData<List<Jewelry>> liveData = null;
@@ -96,7 +84,6 @@ public class JewelryModel {
         if (liveData == null) {
             Log.d("TAG", "live data = null ");
         }
-
         return liveData;
 //        return null;
     }
@@ -110,7 +97,4 @@ public class JewelryModel {
 
     }
 
-    public void delete(Jewelry student){
-
-    }
 }

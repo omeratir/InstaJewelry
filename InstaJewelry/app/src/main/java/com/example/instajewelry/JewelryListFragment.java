@@ -16,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
@@ -27,7 +28,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.instajewelry.Model.AppLocalDb;
 import com.example.instajewelry.Model.Jewelry;
 import com.example.instajewelry.Model.JewelryModel;
 import com.squareup.picasso.Picasso;
@@ -99,6 +99,8 @@ public class JewelryListFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(linearLayoutManager);
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
         jewelryListAdapter = new JewelryListAdapter();
         list.setAdapter(jewelryListAdapter);
 
@@ -141,6 +143,12 @@ public class JewelryListFragment extends Fragment {
             public void onChanged(List<Jewelry> jewelries) {
                 // when the data on live data changed
                 jewelryList = jewelries;
+
+                for (Jewelry j : jewelryList) {
+                    if (j.isDeleted()) {
+                        jewelryList.remove(j);
+                    }
+                }
                 Log.d("TAG" , "get data success");
                 jewelryListAdapter.notifyDataSetChanged();
                 Log.d("TAG" , "adapter success");
@@ -263,12 +271,6 @@ public class JewelryListFragment extends Fragment {
                 NavController navController = Navigation.findNavController(list);
                 NavDirections direction = NewJewelryFragmentDirections.actionGlobalNewJewelryFragment();
                 navController.navigate(direction);
-                return true;
-            case R.id.menu_jewelry_list_info:
-                Log.d("TAG" , "fragment handle info menu click");
-                AlertDialogFragment dialogFragment = AlertDialogFragment.newInstance("Jewelry app info", "welcome to info page!!!");
-
-                dialogFragment.show(getParentFragmentManager(),"TAG");
                 return true;
         }
         return super.onOptionsItemSelected(item);

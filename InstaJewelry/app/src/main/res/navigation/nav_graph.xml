@@ -36,10 +36,10 @@
         android:label="Add new Jewelry"
         tools:layout="@layout/fragment_new_jewelry" />
     <action android:id="@+id/action_global_newJewelryFragment" app:destination="@id/newJewelryFragment" /><action android:id="@+id/action_global_jewelryListFragment" app:destination="@id/jewelryListFragment"/>
-    <activity
-        android:id="@+id/signUpActivity"
-        android:name="com.example.instajewelry.Auth.SignUpActivity"
-        android:label="activity_sign_up"
-        tools:layout="@layout/activity_sign_up" />
     <action android:id="@+id/action_global_homeFragment" app:destination="@id/homeFragment" />
+    <fragment
+        android:id="@+id/myAccountFragment"
+        android:name="com.example.instajewelry.MyAccountFragment"
+        android:label="fragment_my_account"
+        tools:layout="@layout/fragment_my_account" /><action android:id="@+id/action_global_myAccountFragment" app:destination="@id/myAccountFragment"/>
 </navigation>

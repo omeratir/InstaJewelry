@@ -6,6 +6,7 @@ import android.graphics.Matrix;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
@@ -67,6 +68,8 @@ public class NewJewelryFragment extends Fragment {
         soldCb = view.findViewById(R.id.new_jewelry_sold_cb);
         imageView = view.findViewById(R.id.new_jewelry_image_v);
         saveBtn = view.findViewById(R.id.new_jewelry_savenewjewelry_btn);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -17,10 +17,7 @@ public class JewelryListViewModel extends ViewModel {
 
     public LiveData<List<Jewelry>> getData() {
         Log.d("TAG" , "get data - view model");
-        if (liveData == null) {
-            Log.d("TAG" , "live data at view model = null");
-            liveData = JewelryModel.instance.getAllJewelries();
-        }
+        liveData = JewelryModel.instance.getAllJewelries();
         return liveData;
     }
 

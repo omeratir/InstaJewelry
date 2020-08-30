@@ -3,6 +3,7 @@ package com.example.instajewelry;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -21,6 +22,9 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
+
         logout_btn = view.findViewById(R.id.home_logout_btn);
 
         logout_btn.setOnClickListener(new View.OnClickListener() {

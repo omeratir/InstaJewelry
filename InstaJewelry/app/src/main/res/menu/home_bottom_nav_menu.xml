@@ -6,11 +6,16 @@
         android:title="list" />
 
     <item
+        android:id="@+id/newJewelryFragment"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="add" />
+
+    <item
         android:id="@+id/homeFragment"
         android:icon="@android:drawable/ic_menu_today"
         android:title="home" />
     <item
-        android:id="@+id/account"
+        android:id="@+id/myAccountFragment"
         android:icon="@android:drawable/ic_menu_myplaces"
         android:title="account" />
 </menu>

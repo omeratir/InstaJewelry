@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.ServerTimestamp;
 
@@ -21,6 +22,8 @@ public class Jewelry implements Serializable {
     public String cost;
     public Boolean isSold; // true is sold and false if not
     public String imageUrl;
+    public String userId;
+    public boolean deleted;
 //    double lastUpdated;
 
     public Jewelry() {
@@ -34,9 +37,27 @@ public class Jewelry implements Serializable {
         this.cost = cost;
         this.isSold = isSold;
         this.imageUrl = imageUrl;
+        this.userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.deleted = false;
     }
 
-//    public Map<String, Object> toMap() {
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    //    public Map<String, Object> toMap() {
 //        HashMap<String, Object> result = new HashMap<>();
 //        result.put("id", id);
 //        result.put("name", name);

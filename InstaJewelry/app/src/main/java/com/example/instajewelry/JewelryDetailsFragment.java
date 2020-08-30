@@ -1,18 +1,31 @@
 package com.example.instajewelry;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
 import com.example.instajewelry.Model.Jewelry;
+import com.example.instajewelry.Model.JewelryFirebase;
+import com.example.instajewelry.Model.JewelryModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class JewelryDetailsFragment extends Fragment {
 
@@ -21,6 +34,7 @@ public class JewelryDetailsFragment extends Fragment {
     TextView type;
     CheckBox isSoldcb;
     TextView cost;
+    String userId;
 
 
     public JewelryDetailsFragment() {
@@ -33,10 +47,14 @@ public class JewelryDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_jewelry_details, container, false);
 
+        ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+
         name = view.findViewById(R.id.jewelry_details_name_tv);
         type = view.findViewById(R.id.jewelry_details_type_tv);
         isSoldcb = view.findViewById(R.id.jewelry_details_isSold_cb);
         cost = view.findViewById(R.id.jewelry_details_cost_tv);
+
+        userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         jewelry = JewelryDetailsFragmentArgs.fromBundle(getArguments()).getJewelry();
 
@@ -64,39 +82,45 @@ public class JewelryDetailsFragment extends Fragment {
         isSoldcb.setChecked(jewelry.isSold);
     }
 
+    // Connect the activity to the fragment
+    // context = activity
+    // Call one time
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        Log.d("TAG" , "User id = " + userId);
+        Log.d("TAG" , "Jewelry User id = " + jewelry.getUserId());
+
+        if (jewelry.getUserId().equals(userId)) {
+            inflater.inflate(R.menu.jewelry_deatlis_menu, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_jewelry_details_edit:
+                Log.d("TAG" , "Edit clicked!");
+                return true;
+            case R.id.menu_jewelry_details_delete:
+                Log.d("TAG" , "Delete clicked!");
+//                jewelry.setDeleted(true);
+                JewelryFirebase.updateJewelryDeleted(jewelry);
+                JewelryModel.instance.deleteJewelry(jewelry);
+                NavController navController = Navigation.findNavController(getView());
+                NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
+                navController.navigate(direction);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }
 
-//    // TODO: Rename parameter arguments, choose names that match
-//    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//    private static final String ARG_PARAM1 = "param1";
-//    private static final String ARG_PARAM2 = "param2";
-//
-//    // TODO: Rename and change types of parameters
-//    private String mParam1;
-
-
-//    /**
-//     * Use this factory method to create a new instance of
-//     * this fragment using the provided parameters.
-//     *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
-//     * @return A new instance of fragment JewelryDetailsFragment.
-//     */
-//    public static JewelryDetailsFragment newInstance(String param1, String param2) {
-//        JewelryDetailsFragment fragment = new JewelryDetailsFragment();
-//        Bundle args = new Bundle();
-//        args.putString(ARG_PARAM1, param1);
-//        args.putString(ARG_PARAM2, param2);
-//        fragment.setArguments(args);
-//        return fragment;
-//    }
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            mParam1 = getArguments().getString(ARG_PARAM1);
-//            mParam2 = getArguments().getString(ARG_PARAM2);
-//        }
-//    }
