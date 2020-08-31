@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -44,6 +45,7 @@ public class NewJewelryFragment extends Fragment {
     Button saveBtn;
     Bitmap imageBitmap;
     ProgressBar progressBar;
+    JewelryViewModel viewModel;
 
     public NewJewelryFragment() {
         // Required empty public constructor
@@ -71,6 +73,8 @@ public class NewJewelryFragment extends Fragment {
         imageView = view.findViewById(R.id.new_jewelry_image_v);
         saveBtn = view.findViewById(R.id.new_jewelry_savenewjewelry_btn);
         progressBar = view.findViewById(R.id.new_jewelry_progressBar);
+
+        viewModel = new ViewModelProvider(this).get(JewelryViewModel.class);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().hide();
 
@@ -126,7 +130,7 @@ public class NewJewelryFragment extends Fragment {
 
                     // create object
                     Jewelry jewelry = new Jewelry(name,name,type,cost,ifSold,url);
-                    JewelryModel.instance.addJewelry(jewelry, new JewelryModel.Listener<Boolean>() {
+                    viewModel.add(jewelry, new JewelryModel.Listener<Boolean>() {
                         @Override
                         public void onComplete(Boolean data) {
                             Log.d("TAG", "save new jewelry success");
@@ -145,7 +149,7 @@ public class NewJewelryFragment extends Fragment {
         } else {
             // create object
             Jewelry jewelry = new Jewelry(name,name,type,cost,ifSold,null);
-            JewelryModel.instance.addJewelry(jewelry, new JewelryModel.Listener<Boolean>() {
+            viewModel.add(jewelry, new JewelryModel.Listener<Boolean>() {
                 @Override
                 public void onComplete(Boolean data) {
                     Log.d("TAG", "save new jewelry success");

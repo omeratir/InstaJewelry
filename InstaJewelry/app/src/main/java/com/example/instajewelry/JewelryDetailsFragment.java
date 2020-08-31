@@ -38,7 +38,7 @@ public class JewelryDetailsFragment extends Fragment {
     TextView cost;
     String userId;
     ImageView imageView;
-    JewelryListViewModel viewModel;
+    JewelryViewModel viewModel;
 
 
     public JewelryDetailsFragment() {
@@ -52,6 +52,7 @@ public class JewelryDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_jewelry_details, container, false);
 
         ((AppCompatActivity) getActivity()).getSupportActionBar().show();
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
         name = view.findViewById(R.id.jewelry_details_name_tv);
         type = view.findViewById(R.id.jewelry_details_type_tv);
@@ -71,9 +72,9 @@ public class JewelryDetailsFragment extends Fragment {
         closeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Back to list by pop back stack
-                NavController navController = Navigation.findNavController(v);
-                navController.popBackStack();
+                NavController navController = Navigation.findNavController(getView());
+                NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
+                navController.navigate(direction);
             }
         });
         return view;
@@ -86,8 +87,7 @@ public class JewelryDetailsFragment extends Fragment {
         cost.setText(jewelry.cost + " NIS");
         isSoldcb.setChecked(jewelry.isSold);
         if ((jewelry.imageUrl != null) && (jewelry.imageUrl != "")) {
-            // add spinner here
-            Picasso.get().load(jewelry.imageUrl).placeholder(R.drawable.jewelryicon).into(imageView);
+            Picasso.get().load(jewelry.imageUrl).placeholder(R.drawable.ring2).into(imageView);
         } else {
             imageView.setImageResource(R.drawable.jewelryicon);
         }
@@ -99,7 +99,7 @@ public class JewelryDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(JewelryListViewModel.class);
+        viewModel = new ViewModelProvider(this).get(JewelryViewModel.class);
         setHasOptionsMenu(true);
     }
 
@@ -132,10 +132,15 @@ public class JewelryDetailsFragment extends Fragment {
     }
 
     public void onDeleteClicked() {
-        JewelryModel.instance.deleteJewelry(jewelry);
-        NavController navController = Navigation.findNavController(getView());
-        NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
-        navController.navigate(direction);
+        viewModel.delete(jewelry, new JewelryModel.Listener<Boolean>() {
+            @Override
+            public void onComplete(Boolean data) {
+                Log.d("TAG", "delete new jewelry success");
+                NavController navController = Navigation.findNavController(getView());
+                NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
+                navController.navigate(direction);
+            }
+        });
     }
 
 }

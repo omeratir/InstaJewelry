@@ -15,7 +15,7 @@ public class JewelryViewModel extends ViewModel {
         JewelryModel.instance.updateJewelry(jewelry, listener);
     }
 
-    public void delete(Jewelry jewelry) {
-        JewelryModel.instance.deleteJewelry(jewelry);
+    public void delete(Jewelry jewelry, JewelryModel.Listener listener) {
+        JewelryModel.instance.deleteJewelry(jewelry, listener);
     }
 }

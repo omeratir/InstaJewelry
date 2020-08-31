@@ -66,7 +66,7 @@ public class JewelryModel {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void deleteJewelry(final Jewelry jewelry) {
+    public void deleteJewelry(final Jewelry jewelry, Listener<Boolean> listener) {
         new AsyncTask<String,String,String>(){
             @Override
             protected String doInBackground(String... strings) {
@@ -74,7 +74,7 @@ public class JewelryModel {
                 return "";
             }
         }.execute("");
-        JewelryFirebase.deleteJewelry(jewelry);
+        JewelryFirebase.deleteJewelry(jewelry, listener);
         refreshJewelryList(null);
     }
 

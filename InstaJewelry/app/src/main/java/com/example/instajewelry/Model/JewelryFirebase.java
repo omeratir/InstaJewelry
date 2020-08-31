@@ -84,7 +84,7 @@ public class JewelryFirebase {
                 });
     }
 
-    public static void deleteJewelry(Jewelry jewelry) {
+    public static void deleteJewelry(Jewelry jewelry, final JewelryModel.Listener<Boolean> listener) {
         updateJewelryDeleted(jewelry);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Log.d("TAG" , "to delete firebase = " + jewelry.id + " " + jewelry.name);
@@ -94,6 +94,7 @@ public class JewelryFirebase {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d("TAG", "DocumentSnapshot successfully deleted!");
+                        listener.onComplete(true);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

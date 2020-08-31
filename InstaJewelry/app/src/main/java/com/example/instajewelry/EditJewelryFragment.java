@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -46,6 +47,7 @@ public class EditJewelryFragment extends Fragment {
     Bitmap imageBitmap;
     ProgressBar progressBar;
     Jewelry jewelry;
+    JewelryViewModel viewModel;
 
     public EditJewelryFragment() {
         // Required empty public constructor
@@ -75,6 +77,8 @@ public class EditJewelryFragment extends Fragment {
         progressBar = view.findViewById(R.id.edit_jewelry_progressBar);
 
         jewelry = EditJewelryFragmentArgs.fromBundle(getArguments()).getJewelry();
+
+        viewModel = new ViewModelProvider(this).get(JewelryViewModel.class);
 
         nameTv.setText(jewelry.name.toString());
         typeTv.setText(jewelry.type.toString());
@@ -125,7 +129,7 @@ public class EditJewelryFragment extends Fragment {
 
                     // create object
                     Jewelry jewelry1 = new Jewelry(jewelry.id,name,type,cost,ifSold,url);
-                    JewelryModel.instance.updateJewelry(jewelry1, new JewelryModel.Listener<Boolean>() {
+                    viewModel.update(jewelry1, new JewelryModel.Listener<Boolean>() {
                         @Override
                         public void onComplete(Boolean data) {
                             Log.d("TAG", "update new jewelry success");
@@ -144,7 +148,7 @@ public class EditJewelryFragment extends Fragment {
         } else {
             // create object
             final Jewelry jewelry1 = new Jewelry(jewelry.id,name,type,cost,ifSold,jewelry.imageUrl);
-            JewelryModel.instance.updateJewelry(jewelry1, new JewelryModel.Listener<Boolean>() {
+            viewModel.update(jewelry1, new JewelryModel.Listener<Boolean>() {
                 @Override
                 public void onComplete(Boolean data) {
                     Log.d("TAG", "update new jewelry success");
