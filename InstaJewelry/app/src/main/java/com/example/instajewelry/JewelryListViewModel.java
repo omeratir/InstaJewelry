@@ -23,6 +23,10 @@ public class JewelryListViewModel extends ViewModel {
         JewelryModel.instance.deleteJewelry(jewelry);
     }
 
+    public void updateJewelryVM(Jewelry jewelry) {
+//        JewelryModel.instance.updateJewelry(jewelry);
+    }
+
     public void refresh(JewelryModel.CompListener listener) {
         JewelryModel.instance.refreshJewelryList(listener);
     }

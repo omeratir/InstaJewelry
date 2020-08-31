@@ -43,4 +43,14 @@
         android:label="fragment_my_account"
         tools:layout="@layout/fragment_my_account" />
     <action android:id="@+id/action_global_myAccountFragment" app:destination="@id/myAccountFragment" />
+    <fragment
+        android:id="@+id/editJewelryFragment"
+        android:name="com.example.instajewelry.EditJewelryFragment"
+        android:label="fragment_edit_jewelry"
+        tools:layout="@layout/fragment_edit_jewelry" >
+        <argument
+            android:name="Jewelry"
+            app:argType="com.example.instajewelry.Model.Jewelry" />
+    </fragment>
+    <action android:id="@+id/action_global_editJewelryFragment" app:destination="@id/editJewelryFragment" />
 </navigation>

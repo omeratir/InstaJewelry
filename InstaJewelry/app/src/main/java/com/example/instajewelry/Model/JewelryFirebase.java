@@ -36,7 +36,6 @@ public class JewelryFirebase {
                         }
                     }
                 }
-                Log.d("TAG" , "db get");
                 listener.onComplete(jewelryList);
             }
         });
@@ -50,7 +49,8 @@ public class JewelryFirebase {
 
         Log.d("TAG" , "add = " + jewelry.id + " " + documentReference.getId());
 
-        documentReference.set(jewelry).addOnCompleteListener(new OnCompleteListener<Void>() {
+        documentReference.set(jewelry)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if (listener!=null){
@@ -58,16 +58,21 @@ public class JewelryFirebase {
                 }
             }
         });
+    }
 
-
-//        db.collection(JEWELRY_COLLECTION).document().set(jewelry).addOnCompleteListener(new OnCompleteListener<Void>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Void> task) {
-//                if (listener!=null){
-//                    listener.onComplete(task.isSuccessful());
-//                }
-//            }
-//        });
+    public static void updateJewelry(Jewelry jewelry, final JewelryModel.Listener<Boolean> listener) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference documentReference = db.collection(JEWELRY_COLLECTION).document(jewelry.id);
+        documentReference.update(
+                "name" , jewelry.name , "cost" , jewelry.cost , "isSold" , jewelry.isSold, "type", jewelry.type)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (listener!=null){
+                            listener.onComplete(task.isSuccessful());
+                        }
+                    }
+                });
     }
 
     public static void deleteJewelry(Jewelry jewelry) {

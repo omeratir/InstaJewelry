@@ -26,7 +26,6 @@ public class JewelryModel {
 
     }
 
-
     public void addJewelry(Jewelry jewelry,Listener<Boolean> listener) {
         JewelryFirebase.addJewelry(jewelry,listener);
     }
@@ -40,14 +39,11 @@ public class JewelryModel {
                 new AsyncTask<String,String,String>(){
                     @Override
                     protected String doInBackground(String... strings) {
-                        Log.d("TAG" , "do in background refresh");
+                        Log.d("TAG" , "Backgroud");
                         for(Jewelry jewelry : data) {
-                            Log.d("TAG", "Jewelry = " +  jewelry.id + " " + jewelry.name + " " + jewelry.isDeleted());
                             if (!jewelry.isDeleted()) {
-                                Log.d("TAG", "Insert = " + jewelry.name + " " + jewelry.isDeleted());
+                                Log.d("TAG" , "Insert = " + jewelry.name);
                                 AppLocalDb.db.jewelryDao().insertAll(jewelry);
-                            } else {
-//                                AppLocalDb.db.jewelryDao().delete(jewelry);
                             }
                         }
                         return "";
@@ -82,27 +78,18 @@ public class JewelryModel {
         refreshJewelryList(null);
     }
 
+    public void updateJewelry(Jewelry jewelry, Listener<Boolean> listener) {
+        JewelryFirebase.updateJewelry(jewelry,listener);
+    }
+
     public LiveData<List<Jewelry>> getAllJewelries(){
-        Log.d("TAG" , "get all");
         LiveData<List<Jewelry>> liveData = null;
         liveData = AppLocalDb.db.jewelryDao().getAll();
         refreshJewelryList(null);
-        Log.d("TAG" , "get all from app local db");
-        if (liveData == null) {
-            Log.d("TAG", "live data = null ");
-        }
 
         return liveData;
-//        return null;
     }
 
 
-    public Jewelry getStudent(String id){
-        return null;
-    }
-
-    public void update(Jewelry student){
-
-    }
 
 }

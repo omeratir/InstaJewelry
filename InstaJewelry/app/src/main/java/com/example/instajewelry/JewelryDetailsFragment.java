@@ -96,8 +96,6 @@ public class JewelryDetailsFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        Log.d("TAG" , "User id = " + userId);
-        Log.d("TAG" , "Jewelry User id = " + jewelry.getUserId());
 
         if (jewelry.getUserId().equals(userId)) {
             inflater.inflate(R.menu.jewelry_deatlis_menu, menu);
@@ -108,19 +106,26 @@ public class JewelryDetailsFragment extends Fragment {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_jewelry_details_edit:
-                Log.d("TAG" , "Edit clicked!");
+                onEditClicked();
                 return true;
             case R.id.menu_jewelry_details_delete:
-                Log.d("TAG" , "Delete clicked!");
-//                AlertDialogFragment dialogFragment = AlertDialogFragment.newInstance("WARNING", "Are you sure that you want to delete?");
-//                dialogFragment.show(getParentFragmentManager(),"TAG");
-                viewModel.deleteJewelryVM(jewelry);
-                NavController navController = Navigation.findNavController(getView());
-                NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
-                navController.navigate(direction);
+                onDeleteClicked();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void onEditClicked() {
+        NavController navController = Navigation.findNavController(getView());
+        NavDirections direction = EditJewelryFragmentDirections.actionGlobalEditJewelryFragment(jewelry);
+        navController.navigate(direction);
+    }
+
+    public void onDeleteClicked() {
+        viewModel.deleteJewelryVM(jewelry);
+        NavController navController = Navigation.findNavController(getView());
+        NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
+        navController.navigate(direction);
     }
 
 }
