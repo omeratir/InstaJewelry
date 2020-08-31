@@ -13,8 +13,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 public class JewelryFirebase {
     final static String JEWELRY_COLLECTION = "jewelries";
@@ -61,14 +63,21 @@ public class JewelryFirebase {
     }
 
     public static void updateJewelry(Jewelry jewelry, final JewelryModel.Listener<Boolean> listener) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("name", jewelry.name);
+        map.put("cost", jewelry.cost);
+        map.put("isSold", jewelry.isSold);
+        map.put("type", jewelry.type);
+        map.put("imageUrl", jewelry.imageUrl);
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         DocumentReference documentReference = db.collection(JEWELRY_COLLECTION).document(jewelry.id);
-        documentReference.update(
-                "name" , jewelry.name , "cost" , jewelry.cost , "isSold" , jewelry.isSold, "type", jewelry.type)
+        documentReference.update(map)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (listener!=null){
+                            Log.d("TAG", "DocumentSnapshot successfully update!");
                             listener.onComplete(task.isSuccessful());
                         }
                     }

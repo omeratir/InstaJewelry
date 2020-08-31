@@ -13,6 +13,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +77,25 @@ public class NewJewelryFragment extends Fragment {
         saveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String name = nameTv.getText().toString().trim();
+                String type = typeTv.getText().toString().trim();
+                String cost = costTv.getText().toString().trim();
+
+                if (TextUtils.isEmpty(name)) {
+                    nameTv.setError("Name is required.");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(type)) {
+                    typeTv.setError("Color is required.");
+                    return;
+                }
+
+                if (TextUtils.isEmpty(cost)) {
+                    costTv.setError("Cost is required.");
+                    return;
+                }
+
                 saveNewJewelry();
             }
         });

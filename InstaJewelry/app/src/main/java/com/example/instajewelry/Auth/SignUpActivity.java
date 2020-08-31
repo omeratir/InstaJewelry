@@ -90,7 +90,7 @@ public class SignUpActivity extends AppCompatActivity {
                 }
 
                 if (TextUtils.isEmpty(name)) {
-                    email_et.setError("Enter your name.");
+                    name_et.setError("Enter your name.");
                     return;
                 }
 

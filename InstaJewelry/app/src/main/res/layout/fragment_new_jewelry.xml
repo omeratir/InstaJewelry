@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="#FAF2F2"
     tools:context=".NewJewelryFragment">
 
     <ImageView
@@ -13,7 +14,8 @@
         android:layout_marginTop="8dp"
         android:background="@android:color/transparent"
         android:hapticFeedbackEnabled="false"
-        android:src="@drawable/jewelryicon"
+        android:padding="1dp"
+        android:src="@drawable/ring2"
         app:layout_constraintDimensionRatio="4:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.51"
@@ -27,6 +29,8 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
+        android:backgroundTint="#E6C5C5"
+        android:fontFamily="casual"
         android:text="Take Photo"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -69,7 +73,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
-        android:hint="Type of Jewelry"
+        android:hint="Color of Jewelry"
         android:inputType="textPersonName"
         android:textAlignment="center"
         app:layout_constraintEnd_toEndOf="parent"
@@ -93,10 +97,15 @@
 
     <Button
         android:id="@+id/new_jewelry_savenewjewelry_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="48dp"
+        android:layout_marginStart="32dp"
         android:layout_marginTop="8dp"
+        android:layout_marginEnd="32dp"
+        android:backgroundTint="#BD7C77"
+        android:fontFamily="casual"
         android:text="Save Jewelry!"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/new_jewelry_sold_cb" />

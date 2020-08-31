@@ -197,7 +197,7 @@ public class JewelryListFragment extends Fragment {
                 // add spinner here
                 Picasso.get().load(j.imageUrl).placeholder(R.drawable.jewelryicon).into(image);
             } else {
-                image.setImageResource(R.drawable.jewelryicon);
+                image.setImageResource(R.drawable.ring2);
             }
         }
     }

@@ -129,10 +129,9 @@ public class EditJewelryFragment extends Fragment {
                         @Override
                         public void onComplete(Boolean data) {
                             Log.d("TAG", "update new jewelry success");
-                            NavController navController = Navigation.findNavController(view);
+                            NavController navController = Navigation.findNavController(getView());
                             NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
                             navController.navigate(direction);
-
                         }
                     });
                 }
@@ -144,12 +143,12 @@ public class EditJewelryFragment extends Fragment {
             });
         } else {
             // create object
-            final Jewelry jewelry1 = new Jewelry(jewelry.id,name,type,cost,ifSold,null);
+            final Jewelry jewelry1 = new Jewelry(jewelry.id,name,type,cost,ifSold,jewelry.imageUrl);
             JewelryModel.instance.updateJewelry(jewelry1, new JewelryModel.Listener<Boolean>() {
                 @Override
                 public void onComplete(Boolean data) {
                     Log.d("TAG", "update new jewelry success");
-                    NavController navController = Navigation.findNavController(view);
+                    NavController navController = Navigation.findNavController(getView());
                     NavDirections direction = JewelryDetailsFragmentDirections.actionGlobalJewelryDetailsFragment(jewelry1);
                     navController.navigate(direction);
                 }

@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.instajewelry.Model.Jewelry;
@@ -26,6 +27,7 @@ import com.example.instajewelry.Model.JewelryFirebase;
 import com.example.instajewelry.Model.JewelryModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.squareup.picasso.Picasso;
 
 public class JewelryDetailsFragment extends Fragment {
 
@@ -35,6 +37,7 @@ public class JewelryDetailsFragment extends Fragment {
     CheckBox isSoldcb;
     TextView cost;
     String userId;
+    ImageView imageView;
     JewelryListViewModel viewModel;
 
 
@@ -54,6 +57,7 @@ public class JewelryDetailsFragment extends Fragment {
         type = view.findViewById(R.id.jewelry_details_type_tv);
         isSoldcb = view.findViewById(R.id.jewelry_details_isSold_cb);
         cost = view.findViewById(R.id.jewelry_details_cost_tv);
+        imageView = view.findViewById(R.id.jewelry_details_image);
 
         userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
@@ -79,8 +83,14 @@ public class JewelryDetailsFragment extends Fragment {
     private void update_display() {
         name.setText(jewelry.name);
         type.setText(jewelry.type);
-        cost.setText(jewelry.cost);
+        cost.setText(jewelry.cost + " NIS");
         isSoldcb.setChecked(jewelry.isSold);
+        if ((jewelry.imageUrl != null) && (jewelry.imageUrl != "")) {
+            // add spinner here
+            Picasso.get().load(jewelry.imageUrl).placeholder(R.drawable.jewelryicon).into(imageView);
+        } else {
+            imageView.setImageResource(R.drawable.jewelryicon);
+        }
     }
 
     // Connect the activity to the fragment
@@ -122,7 +132,7 @@ public class JewelryDetailsFragment extends Fragment {
     }
 
     public void onDeleteClicked() {
-        viewModel.deleteJewelryVM(jewelry);
+        JewelryModel.instance.deleteJewelry(jewelry);
         NavController navController = Navigation.findNavController(getView());
         NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
         navController.navigate(direction);

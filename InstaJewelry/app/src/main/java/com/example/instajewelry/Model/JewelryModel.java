@@ -80,13 +80,13 @@ public class JewelryModel {
 
     public void updateJewelry(Jewelry jewelry, Listener<Boolean> listener) {
         JewelryFirebase.updateJewelry(jewelry,listener);
+        refreshJewelryList(null);
     }
 
     public LiveData<List<Jewelry>> getAllJewelries(){
         LiveData<List<Jewelry>> liveData = null;
         liveData = AppLocalDb.db.jewelryDao().getAll();
         refreshJewelryList(null);
-
         return liveData;
     }
 
