@@ -8,6 +8,8 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.firebase.FirebaseAppLifecycleListener;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -27,10 +29,6 @@ public class JewelryModel {
 
     public void addJewelry(Jewelry jewelry,Listener<Boolean> listener) {
         JewelryFirebase.addJewelry(jewelry,listener);
-        // insert to local storage
-        Log.d("TAG", "INSERT to local storage");
-//        AppLocalDb.db.jewelryDao().insertAll(jewelry);
-//        Log.d("TAG", "INSERT to local storage success");
     }
 
     public void refreshJewelryList(final CompListener listener){
@@ -43,11 +41,13 @@ public class JewelryModel {
                     @Override
                     protected String doInBackground(String... strings) {
                         Log.d("TAG" , "do in background refresh");
-                        for(Jewelry jewelry : data){
+                        for(Jewelry jewelry : data) {
+                            Log.d("TAG", "Jewelry = " +  jewelry.id + " " + jewelry.name + " " + jewelry.isDeleted());
                             if (!jewelry.isDeleted()) {
+                                Log.d("TAG", "Insert = " + jewelry.name + " " + jewelry.isDeleted());
                                 AppLocalDb.db.jewelryDao().insertAll(jewelry);
                             } else {
-                                AppLocalDb.db.jewelryDao().delete(jewelry);
+//                                AppLocalDb.db.jewelryDao().delete(jewelry);
                             }
                         }
                         return "";
@@ -69,10 +69,17 @@ public class JewelryModel {
         JewelryFirebase.getAllJewelries(listener);
     }
 
-    public void deleteJewelry(Jewelry jewelry) {
+    @SuppressLint("StaticFieldLeak")
+    public void deleteJewelry(final Jewelry jewelry) {
+        new AsyncTask<String,String,String>(){
+            @Override
+            protected String doInBackground(String... strings) {
+                    AppLocalDb.db.jewelryDao().deleteJewelry(jewelry);
+                return "";
+            }
+        }.execute("");
         JewelryFirebase.deleteJewelry(jewelry);
         refreshJewelryList(null);
-//        AppLocalDb.db.jewelryDao().delete(jewelry);
     }
 
     public LiveData<List<Jewelry>> getAllJewelries(){
@@ -84,6 +91,7 @@ public class JewelryModel {
         if (liveData == null) {
             Log.d("TAG", "live data = null ");
         }
+
         return liveData;
 //        return null;
     }

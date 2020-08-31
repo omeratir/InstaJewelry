@@ -41,6 +41,17 @@ public class Jewelry implements Serializable {
         this.deleted = false;
     }
 
+    public Jewelry(String id, String name, String type, String cost, Boolean isSold, String imageUrl, Boolean deleted) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.cost = cost;
+        this.isSold = isSold;
+        this.imageUrl = imageUrl;
+        this.userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        this.deleted = deleted;
+    }
+
     public String getUserId() {
         return userId;
     }

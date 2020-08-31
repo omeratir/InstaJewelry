@@ -43,10 +43,10 @@ public class JewelryListFragment extends Fragment {
 
     RecyclerView list;
     List<Jewelry> jewelryList = new LinkedList<Jewelry>();
+    List<Jewelry> tempList = new LinkedList<Jewelry>();
     JewelryListAdapter jewelryListAdapter;
     JewelryListViewModel viewModel;
     LiveData<List<Jewelry>> liveData;
-    SwipeRefreshLayout swipeRefresh;
 
     interface Delegate {
         void onItemSelected(Jewelry jewelry);
@@ -55,15 +55,7 @@ public class JewelryListFragment extends Fragment {
     Delegate parent;
 
     public JewelryListFragment() {
-//        JewelryModel.instance.getAllJewelriesLocal(new JewelryModel.Listener<List<Jewelry>>() {
-//            @Override
-//            public void onComplete(List<Jewelry> _data) {
-//                jewelryList = _data;
-//                if (jewelryListAdapter != null){
-//                    jewelryListAdapter.notifyDataSetChanged();
-//                }
-//            }
-//        });
+
     }
 
     // Connect the activity to the fragment
@@ -90,7 +82,7 @@ public class JewelryListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        final View view = inflater.inflate(R.layout.fragment_jewelry_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_jewelry_list, container, false);
 
         list = view.findViewById(R.id.fragment_jewelry_list_list);
         list.setHasFixedSize(true);
@@ -110,18 +102,28 @@ public class JewelryListFragment extends Fragment {
                 Log.d("TAG", "row was clicked = " + position);
                 Jewelry jewelry = jewelryList.get(position);
                 parent.onItemSelected(jewelry);
-//                NavGraphDirections.ActionGlobalJewelryDetailsFragment direction = JewelryListFragmentDirections.actionGlobalJewelryDetailsFragment(jewelry);
-//                Navigation.findNavController(view).navigate(direction);
             }
         });
 
-//        jewelryList = viewModel.getDataList();
 
-        Log.d("TAG" , "get live data");
+        liveData = viewModel.getData();
+        liveData.observe(getViewLifecycleOwner(), new Observer<List<Jewelry>>() {
+            @Override
+            public void onChanged(List<Jewelry> jewelries) {
+//                tempList = new LinkedList<Jewelry>();
+//                // when the data on live data changed
+//                for (Jewelry jewelry : jewelries) {
+//                    if (!jewelry.isDeleted()) {
+//                        tempList.add(jewelry);
+//                    }
+//                }
+//                jewelryList = tempList;
+                jewelryList = jewelries;
+                jewelryListAdapter.notifyDataSetChanged();
+            }
+        });
 
-
-        Log.d("TAG" , "refresh");
-        swipeRefresh = view.findViewById(R.id.jewelry_list_swipe_refresh);
+        final SwipeRefreshLayout swipeRefresh = view.findViewById(R.id.jewelry_list_swipe_refresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -129,33 +131,13 @@ public class JewelryListFragment extends Fragment {
                 viewModel.refresh(new JewelryModel.CompListener() {
                     @Override
                     public void onComplete() {
-                        swipeRefresh.setRefreshing(true);
+                        swipeRefresh.setRefreshing(false);
                     }
                 });
             }
         });
 
-        liveData = viewModel.getData();
 
-        Log.d("TAG" , "observe live data");
-        liveData.observe(getViewLifecycleOwner(), new Observer<List<Jewelry>>() {
-            @Override
-            public void onChanged(List<Jewelry> jewelries) {
-                // when the data on live data changed
-                jewelryList = jewelries;
-
-                for (Jewelry j : jewelryList) {
-                    if (j.isDeleted()) {
-                        jewelryList.remove(j);
-                    }
-                }
-                Log.d("TAG" , "get data success");
-                jewelryListAdapter.notifyDataSetChanged();
-                Log.d("TAG" , "adapter success");
-                swipeRefresh.setRefreshing(false);
-            }
-
-        });
 
         return view;
     }

@@ -35,6 +35,7 @@ public class JewelryDetailsFragment extends Fragment {
     CheckBox isSoldcb;
     TextView cost;
     String userId;
+    JewelryListViewModel viewModel;
 
 
     public JewelryDetailsFragment() {
@@ -88,7 +89,7 @@ public class JewelryDetailsFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
+        viewModel = new ViewModelProvider(this).get(JewelryListViewModel.class);
         setHasOptionsMenu(true);
     }
 
@@ -111,17 +112,12 @@ public class JewelryDetailsFragment extends Fragment {
                 return true;
             case R.id.menu_jewelry_details_delete:
                 Log.d("TAG" , "Delete clicked!");
-                AlertDialogFragment dialogFragment = AlertDialogFragment.newInstance("WARNING", "Are you sure that you want to delete?");
-                dialogFragment.show(getParentFragmentManager(),"TAG");
-                if (dialogFragment.isCancelable()) {
-                    Log.d("TAG" , "Cancel clicked");
-                }
-//                jewelry.setDeleted(true);
-//                JewelryFirebase.updateJewelryDeleted(jewelry);
-//                JewelryModel.instance.deleteJewelry(jewelry);
-//                NavController navController = Navigation.findNavController(getView());
-//                NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
-//                navController.navigate(direction);
+//                AlertDialogFragment dialogFragment = AlertDialogFragment.newInstance("WARNING", "Are you sure that you want to delete?");
+//                dialogFragment.show(getParentFragmentManager(),"TAG");
+                viewModel.deleteJewelryVM(jewelry);
+                NavController navController = Navigation.findNavController(getView());
+                NavDirections direction = JewelryListFragmentDirections.actionGlobalJewelryListFragment();
+                navController.navigate(direction);
                 return true;
         }
         return super.onOptionsItemSelected(item);

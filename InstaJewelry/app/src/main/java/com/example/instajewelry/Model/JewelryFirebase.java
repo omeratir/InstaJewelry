@@ -48,6 +48,8 @@ public class JewelryFirebase {
 
         jewelry.setId(documentReference.getId());
 
+        Log.d("TAG" , "add = " + jewelry.id + " " + documentReference.getId());
+
         documentReference.set(jewelry).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
@@ -69,9 +71,9 @@ public class JewelryFirebase {
     }
 
     public static void deleteJewelry(Jewelry jewelry) {
-        Log.d("TAG", "Delete document!");
+        updateJewelryDeleted(jewelry);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Log.d("TAG", "id before delete = " + jewelry.id);
+        Log.d("TAG" , "to delete firebase = " + jewelry.id + " " + jewelry.name);
         db.collection(JEWELRY_COLLECTION).document(jewelry.id)
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {

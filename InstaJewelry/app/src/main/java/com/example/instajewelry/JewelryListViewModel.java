@@ -13,22 +13,14 @@ import java.util.List;
 
 public class JewelryListViewModel extends ViewModel {
     LiveData<List<Jewelry>> liveData;
-    List<Jewelry> list;
 
     public LiveData<List<Jewelry>> getData() {
-        Log.d("TAG" , "get data - view model");
         liveData = JewelryModel.instance.getAllJewelries();
         return liveData;
     }
 
-    public List<Jewelry> getDataList() {
-         JewelryModel.instance.getAllJewelry(new JewelryModel.Listener<List<Jewelry>>() {
-                @Override
-                public void onComplete(List<Jewelry> data) {
-                    list = data;
-                }
-            });
-        return list;
+    public void deleteJewelryVM(Jewelry jewelry) {
+        JewelryModel.instance.deleteJewelry(jewelry);
     }
 
     public void refresh(JewelryModel.CompListener listener) {

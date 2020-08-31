@@ -22,4 +22,8 @@ public interface JewelryDao {
 
     @Delete
     void delete(Jewelry jewelry);
+
+    @Delete
+    public void deleteJewelry(Jewelry... jewelries);
+
 }
