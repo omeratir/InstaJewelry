@@ -110,15 +110,15 @@ public class JewelryListFragment extends Fragment {
         liveData.observe(getViewLifecycleOwner(), new Observer<List<Jewelry>>() {
             @Override
             public void onChanged(List<Jewelry> jewelries) {
-//                tempList = new LinkedList<Jewelry>();
-//                // when the data on live data changed
-//                for (Jewelry jewelry : jewelries) {
-//                    if (!jewelry.isDeleted()) {
-//                        tempList.add(jewelry);
-//                    }
-//                }
-//                jewelryList = tempList;
-                jewelryList = jewelries;
+                tempList = new LinkedList<Jewelry>();
+                // when the data on live data changed
+                for (Jewelry jewelry : jewelries) {
+                    if (!jewelry.isDeleted()) {
+                        tempList.add(jewelry);
+                    }
+                }
+                jewelryList = tempList;
+//                jewelryList = jewelries;
                 jewelryListAdapter.notifyDataSetChanged();
             }
         });
