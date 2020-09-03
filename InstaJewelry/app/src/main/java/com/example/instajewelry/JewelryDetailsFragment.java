@@ -89,7 +89,7 @@ public class JewelryDetailsFragment extends Fragment {
         if ((jewelry.imageUrl != null) && (jewelry.imageUrl != "")) {
             Picasso.get().load(jewelry.imageUrl).placeholder(R.drawable.ring2).into(imageView);
         } else {
-            imageView.setImageResource(R.drawable.jewelryicon);
+            imageView.setImageResource(R.drawable.ring2);
         }
     }
 

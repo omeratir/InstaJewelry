@@ -1,16 +1,11 @@
 package com.example.instajewelry.Model;
 
 import android.annotation.SuppressLint;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
-import com.google.firebase.FirebaseAppLifecycleListener;
-
-import java.util.LinkedList;
 import java.util.List;
 
 public class JewelryModel {
@@ -24,10 +19,6 @@ public class JewelryModel {
     }
     public JewelryModel(){
 
-    }
-
-    public void addJewelry(Jewelry jewelry,Listener<Boolean> listener) {
-        JewelryFirebase.addJewelry(jewelry,listener);
     }
 
     public void refreshJewelryList(final CompListener listener){
@@ -61,9 +52,18 @@ public class JewelryModel {
         });
     }
 
-    public void getAllJewelry(final  Listener<List<Jewelry>> listener) {
-        JewelryFirebase.getAllJewelries(listener);
+    @SuppressLint("StaticFieldLeak")
+    public void addJewelry(final Jewelry jewelry, Listener<Boolean> listener) {
+        new AsyncTask<String,String,String>(){
+            @Override
+            protected String doInBackground(String... strings) {
+                AppLocalDb.db.jewelryDao().insertAll(jewelry);
+                return "";
+            }
+        }.execute("");
+        JewelryFirebase.addJewelry(jewelry,listener);
     }
+
 
     @SuppressLint("StaticFieldLeak")
     public void deleteJewelry(final Jewelry jewelry, Listener<Boolean> listener) {
@@ -78,9 +78,16 @@ public class JewelryModel {
         refreshJewelryList(null);
     }
 
-    public void updateJewelry(Jewelry jewelry, Listener<Boolean> listener) {
+    @SuppressLint("StaticFieldLeak")
+    public void updateJewelry(final Jewelry jewelry, Listener<Boolean> listener) {
+        new AsyncTask<String,String,String>(){
+            @Override
+            protected String doInBackground(String... strings) {
+                AppLocalDb.db.jewelryDao().insertAll(jewelry);
+                return "";
+            }
+        }.execute("");
         JewelryFirebase.updateJewelry(jewelry,listener);
-        refreshJewelryList(null);
     }
 
     public LiveData<List<Jewelry>> getAllJewelries(){
